@@ -7,11 +7,13 @@
 using std::domain_error;
 using std::vector;
 
-double grade(double midterm, double final, vector<double>& hw)
+double grade(double midterm, double final, const vector<double>& hw)
 {
-	if(hw.size()==0)
-		throw domain_error("student has done no homework");
+	if(hw.size()==0){
+		//throw domain_error("student has done no homework");
 
+		return 0;
+	}
 	return grade(midterm, final, median(hw));
 }
 
