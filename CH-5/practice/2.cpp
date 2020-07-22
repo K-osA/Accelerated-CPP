@@ -17,7 +17,7 @@ struct Student_info{
 
 istream& read(istream&, Student_info&);
 istream& read_hw(istream&, vector<double>&);
-double score(Student_info&);
+void score(Student_info&);
 double score(double, double, double);
 double score(vector<double>&);
 
@@ -41,12 +41,12 @@ istream& read_hw(istream& in, vector<double>& hw){
 	}
 	return in;
 }
-double score(Student_info& s){
+void score(Student_info& s){
 	if(s.homework.size()==0)
 		throw domain_error("? there is no homework");
 	double hw;
 	hw = score(s.homework);
-	return score(s.midterm, s.final, hw);
+	s.score =  score(s.midterm, s.final, hw);
 
 }
 
@@ -80,14 +80,12 @@ int main()
 		for(vector<Student_info>::iterator iter = stu_v.begin();iter!=stu_v.end();iter++){
 			viter=iter;
 			score(*iter);
-			cout << iter->name << string(maxlen+1, ' ') << iter->score;
+			cout << iter->name << string(maxlen+1-(*iter).name.size(),' ') << setprecision(3) <<  iter->score << endl;
 		}
 	}catch(domain_error e){
 		cout << viter->name << e.what() << endl;
 	}
 
 
-	for(vector<Student_info>::iterator iter=stu_v.begin() ; iter!=stu_v.end(); iter++)
-		cout << iter->name << iter->midterm << iter->final << endl;
 	return 0;
 }
