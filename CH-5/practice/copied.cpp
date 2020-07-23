@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define STUDENT_COUNT 4999
+#define STUDENT_COUNT 10
 
 using namespace std;
 
@@ -21,13 +21,7 @@ struct Student_info{
 };
 void read(Student_info&);
 void read_hw(vector<double>&);
-void score(Student_info&);
-double score(double, double, double);
-double score(vector<double>&);
 
-bool compare(const Student_info& a, const Student_info& b){
-	return a.name < b.name;
-}
 
 
 void read(Student_info& s){
@@ -53,31 +47,14 @@ void read_hw(vector<double>& hw){
 	int lim;
 	lim=rand()%8+1;
 
-	for(int i=0;i<lim;i++)
-		hw.push_back(lim);
+	for(int i=0;i<lim;i++){
+		int homework;
+		homework=rand()%100+1;
+		hw.push_back(homework);
+	}
 	return;
 }
-void score(Student_info& s){
-	if(s.homework.size()==0)
-		throw domain_error("? there is no homework");
-	double hw;
-	hw = score(s.homework);
-	s.score =  score(s.midterm, s.final, hw);
 
-}
-
-double score(double mid, double final, double hw){
-	return mid*0.2+final*0.4+hw*0.4;
-}
-
-
-double score(vector<double>& hw){
-	double avg=0;
-	for(vector<double>::iterator iter=hw.begin();iter!=hw.end();iter++)
-		avg+=(*iter);
-	avg/=hw.size();
-	return avg;
-}
 int main()
 {
 	FILE *out=fopen("output.txt","w");
@@ -97,17 +74,19 @@ int main()
 		stu_v.push_back(stu_temp);
 	
 	}
-	//sort(stu_v.begin(), stu_v.end(), compare);
 
 	vector<Student_info>::iterator viter;
 	for(vector<Student_info>::iterator iter = stu_v.begin();iter!=stu_v.end();iter++){
-		try{
 			viter=iter;
-			score(*iter);
-			cout << iter->name << string(maxlen+1-(*iter).name.size(),' ') << setprecision(3) <<  iter->score << endl;
-		}catch(domain_error e){
-		cout << viter->name << e.what() << endl;
-		}
+			fprintf(out,"%s %g %g ",iter->name.c_str(),iter->midterm,iter->final);
+		//	cout << iter->name << " " << iter->midterm << " " << iter->final << " ";
+			for(vector<double>::iterator iter2 = iter->homework.begin();iter2!=iter->homework.end();iter2++){
+				if(iter2+1 == iter->homework.end())
+					fprintf(out,"%g",*iter2);
+				else
+					fprintf(out,"%g ",*iter2);
+			}
+			fprintf(out,"\n");
 	}
 	return 0;
 }
