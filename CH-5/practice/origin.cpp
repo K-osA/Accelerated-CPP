@@ -6,11 +6,6 @@
 #include <list>
 #include <algorithm>
 #include <stdexcept>
-#include <stdlib.h>
-#include <time.h>
-
-#define STUDENT_COUNT 4999
-
 using namespace std;
 
 struct Student_info{
@@ -19,8 +14,9 @@ struct Student_info{
 	double score;
 	vector<double> homework;
 };
-void read(Student_info&);
-void read_hw(vector<double>&);
+
+istream& read(istream&, Student_info&);
+istream& read_hw(istream&, vector<double>&);
 void score(Student_info&);
 double score(double, double, double);
 double score(vector<double>&);
@@ -29,33 +25,21 @@ bool compare(const Student_info& a, const Student_info& b){
 	return a.name < b.name;
 }
 
-
-void read(Student_info& s){
-	int lim;
-	char name[12]={0};
-	lim=rand()%10+1;
-
-	for(int i=0;i<lim;i++){
-		int ch;
-		ch=rand()%26+97;
-		name[i]=(char)ch;
-	}
-	string res(name);
-	s.name=res;
-	s.midterm=rand()%100+1;
-	s.final=rand()%100+1;
-
-	read_hw(s.homework);
-	return;
+istream& read(istream& in, Student_info& s){
+	in >> s.name >> s.midterm >> s.final;
+	read_hw(in, s.homework);
+	return in;
 }
 
-void read_hw(vector<double>& hw){
-	int lim;
-	lim=rand()%8+1;
-
-	for(int i=0;i<lim;i++)
-		hw.push_back(lim);
-	return;
+istream& read_hw(istream& in, vector<double>& hw){
+	if(in){
+		hw.clear();
+		double x;
+		while(in >> x)
+			hw.push_back(x);
+		in.clear();
+	}
+	return in;
 }
 void score(Student_info& s){
 	if(s.homework.size()==0)
@@ -80,23 +64,16 @@ double score(vector<double>& hw){
 }
 int main()
 {
-	srand((unsigned int)time(NULL));
-
-
-
-
 	vector<Student_info> stu_v;
 	Student_info stu_temp;
 	vector<double> homework_t;
 	string::size_type maxlen=0;
 
-	for(int i=0;i<STUDENT_COUNT;i++){
-		read(stu_temp);
+	while(read(cin, stu_temp)){
 		maxlen=max(maxlen, stu_temp.name.size());
 		stu_v.push_back(stu_temp);
-	
 	}
-	//sort(stu_v.begin(), stu_v.end(), compare);
+	sort(stu_v.begin(), stu_v.end(), compare);
 
 	vector<Student_info>::iterator viter;
 	for(vector<Student_info>::iterator iter = stu_v.begin();iter!=stu_v.end();iter++){
