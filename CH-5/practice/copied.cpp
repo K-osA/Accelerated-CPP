@@ -9,14 +9,13 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define STUDENT_COUNT 10
+#define STUDENT_COUNT 73500
 
 using namespace std;
 
 struct Student_info{
 	string name;
 	double midterm, final;
-	double score;
 	vector<double> homework;
 };
 void read(Student_info&);
@@ -57,22 +56,21 @@ void read_hw(vector<double>& hw){
 
 int main()
 {
-	FILE *out=fopen("output.txt","w");
+	FILE *out=fopen("t73500.txt","w");
 	srand((unsigned int)time(NULL));
 
 
 
 
 	vector<Student_info> stu_v;
-	Student_info stu_temp;
 	vector<double> homework_t;
 	string::size_type maxlen=0;
 
 	for(int i=0;i<STUDENT_COUNT;i++){
+		Student_info stu_temp;
 		read(stu_temp);
 		maxlen=max(maxlen, stu_temp.name.size());
 		stu_v.push_back(stu_temp);
-	
 	}
 
 	vector<Student_info>::iterator viter;
